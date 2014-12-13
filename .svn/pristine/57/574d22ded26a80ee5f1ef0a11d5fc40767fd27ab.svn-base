@@ -1,0 +1,23 @@
+
+/*
+ * Introduction to Software Design 2014
+ * Author: Andrew Goettler
+ * Problem: 22.14 Postfix Evaluator Modification
+ * Problem difficulty: Hard
+ * Problem description: Modify the postfix evaluator program of Exercise 22.13
+ * 		so that it can process integer operands larger than 9
+ */
+
+public class PostFixEvalTest
+{
+
+	public static void main(String[] args)
+	{
+		// TODO Add more testing code
+		StringBuffer testExpression = new StringBuffer("a b +");
+		PostfixEvaluator evaluator = new PostfixEvaluator();
+		
+		System.out.println(evaluator.evaluatePostfixExpression(testExpression));
+	}
+
+}

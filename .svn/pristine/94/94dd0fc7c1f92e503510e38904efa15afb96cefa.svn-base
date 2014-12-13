@@ -1,0 +1,113 @@
+
+/*
+ * Introduction to Software Design 2014
+ * Author: Andrew Goettler
+ * Problem: 22.14 Postfix Evaluator Modification
+ * Problem difficulty: Hard
+ * Problem description: Modify the postfix evaluator program of Exercise 22.13
+ * 		so that it can process integer operands larger than 9.
+ */
+
+import java.util.Stack;
+
+/**
+ * 
+ * @author agoettler
+ *
+ */
+public class PostfixEvaluator
+{	
+	/**
+	 * A stack used for performing the postfix evaluation
+	 */
+	private Stack<Integer> operandStack = new Stack<Integer>();
+	
+	/**
+	 * 
+	 * @param expression
+	 * @return
+	 */
+	public int evaluatePostfixExpression(StringBuffer expression)
+	{
+		// TODO implement method here
+		
+		// trim the expression and append the right parentesis
+		expression.trimToSize();
+		expression.append( ")" );
+		
+		// initialize some useful variables
+		int index = 0;
+		int operandX = 0;
+		int operandY = 0;
+		String currentChar;
+		
+		// continue operating until the right parenthesis is encountered
+		do
+		{
+			// get the character at the current index
+			currentChar = expression.substring(index, index+1);
+			
+			// if the character at the current index is a digit:
+			if(currentChar.matches("\\d"))
+			{
+				operandStack.push(Integer.parseInt(currentChar));
+			}
+			
+			// if the character at the current index is an operator
+			else if(currentChar.matches("[+-/*%^]"))
+			{
+				if(!operandStack.isEmpty())
+				{
+					operandX = operandStack.pop();
+				}
+				else
+				{
+					operandX = 0;
+				}
+				
+				if(!operandStack.isEmpty())
+				{
+					operandY = operandStack.pop();
+				}
+				else
+				{
+					operandY = 0;
+				}
+				
+				operandStack.push(calculate(operandY, currentChar, operandX));
+			}
+			
+			index++;
+			
+		} while(!currentChar.equals(")"));
+		
+		return operandStack.pop();
+	}
+	
+	/**
+	 * 
+	 * @param operandA
+	 * @param operator
+	 * @param operandB
+	 * @return
+	 */
+	private int calculate(int operandA, String operator, int operandB)
+	{	
+		switch (operator)
+		{
+			case "+":	return operandA + operandB;
+						
+			case "-":	return operandA - operandB;
+			
+			case "*":	return operandA * operandB;
+			
+			case "/":	return operandA / operandB;
+			
+			case "^":	return (int) Math.pow(operandA, operandB);
+			
+			case "%":	return (int) operandA % operandB;
+			
+			default:	return 0;
+		}
+	}
+}

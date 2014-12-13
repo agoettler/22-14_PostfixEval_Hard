@@ -1,0 +1,169 @@
+
+/*
+ * Introduction to Software Design 2014
+ * Author: Andrew Goettler
+ * Problem: 22.14 Postfix Evaluator Modification
+ * Problem difficulty: Hard
+ * Problem description: Modify the postfix evaluator program of Exercise 22.13
+ * 		so that it can process integer operands larger than 9.
+ */
+
+import java.util.Stack;
+
+/**
+ * 
+ * @author agoettler
+ *
+ */
+public class PostfixEvaluator
+{	
+	/**
+	 * A stack used for performing the postfix evaluation.
+	 */
+	private Stack<Integer> operandStack = new Stack<Integer>();
+	
+	/**
+	 * 
+	 * @param expression
+	 * @return
+	 */
+	public int evaluatePostfixExpression(StringBuffer expression)
+	{
+		try
+		{
+			// trim the expression and append the right parenthesis with a space for tokenizing
+			expression.trimToSize();
+			expression.append( " )" );
+			
+			// tokenize the expression
+			String[] expressionTokens = tokenizeExpression(expression.toString());
+			
+			// initialize some useful variables
+			int result = 0;
+			int index = 0;
+			int operandX = 0;
+			int operandY = 0;
+			String currentToken;
+			
+			// continue operating until the right parenthesis is encountered
+			do
+			{
+				// get the current expression token
+				currentToken = expressionTokens[index];
+				
+				// if the token at the current index is a number, push its integer equivalent onto the stack
+				if(currentToken.matches("\\d+"))
+				{
+					operandStack.push(Integer.parseInt(currentToken));
+				}
+				
+				// if the character at the current index is an operator, pop values off the stack and perform a calculation
+				else if(currentToken.matches("[+-/*%^]"))
+				{
+					// if the stack is empty, use zero for an operand
+					if(!operandStack.isEmpty())
+					{
+						operandX = operandStack.pop();
+					}
+					else
+					{
+						operandX = 0;
+					}
+					
+					// if the stack is empty, use zero for an operand
+					// this allows the negation operation to be performed correctly
+					if(!operandStack.isEmpty())
+					{
+						operandY = operandStack.pop();
+					}
+					else
+					{
+						operandY = 0;
+					}
+					
+					// perform the calculation and push the result onto the stack
+					operandStack.push(calculate(operandY, currentToken, operandX));
+				}
+				
+				// if a token isn't a number or an operator, the expression is invalid
+				else
+				{
+					throw new NumberFormatException(String.format("Value is not a number or operator: %s", currentToken));
+				}
+				
+				// increment the index, moving through the array of string tokens from left to right
+				index++;
+				
+			} while(!currentToken.equals(")"));
+			
+			if(!operandStack.isEmpty())
+			{
+				result = operandStack.pop();
+			}
+			else
+			{
+				result = 0;
+			}
+			
+			return result;
+			
+		} 
+		
+		catch (NumberFormatException numberFormatException)
+		{
+			// TODO Auto-generated catch block
+			numberFormatException.printStackTrace();
+			System.err.printf("\nException: %s \n", numberFormatException);
+			System.out.println("The expression contained an invalid operand or operator.");
+			return 0;
+		} 
+		
+		catch (ArithmeticException arithmeticException)
+		{
+			// TODO Auto-generated catch block
+			arithmeticException.printStackTrace();
+			System.err.printf("\nException: %s \n", arithmeticException);
+			System.out.println("The expression contained an invalid operation.");
+			return 0;
+		}
+	}
+	
+	/**
+	 * 
+	 * @param operandA
+	 * @param operator
+	 * @param operandB
+	 * @return
+	 */
+	private int calculate(int operandA, String operator, int operandB) throws ArithmeticException
+	{	
+		switch (operator)
+		{
+			case "+":	return operandA + operandB;
+						
+			case "-":	return operandA - operandB;
+			
+			case "*":	return operandA * operandB;
+			
+			case "/":	return operandA / operandB;
+			
+			case "^":	return (int) Math.pow(operandA, operandB); // cast returned double as int
+			
+			case "%":	return (int) operandA % operandB; // cast returned float as int
+			
+			default:	return 0;
+		}
+	}
+	
+	/**
+	 * 
+	 * @param expression
+	 * @return
+	 */
+	private String[] tokenizeExpression(String expression)
+	{
+		// split the expression into tokens separated by spaces
+		// this allows for integers greater than 9 to be processed
+		return expression.split(" ");
+	}
+}

@@ -1,0 +1,64 @@
+import java.util.Scanner;
+
+
+/*
+ * Introduction to Software Design 2014
+ * Author: Andrew Goettler
+ * Problem: 22.14 Postfix Evaluator Modification
+ * Problem difficulty: Hard
+ * Problem description: Modify the postfix evaluator program of Exercise 22.13
+ * 		so that it can process integer operands larger than 9
+ */
+
+/**
+ * A simple program for testing and demonstrating the PostfixEvaluator class. Runs in the terminal
+ * and allows the user to repeatedly enter expressions. The program is terminated by entering the
+ * string "exit".
+ * 
+ * @author agoettler
+ *
+ */
+public class PostFixEvalTest
+{
+
+	public static void main(String[] args)
+	{
+		Scanner userInputReceiver = new Scanner(System.in); // scanner for receiving user input
+		StringBuffer userInputBuffer = new StringBuffer(); // StringBuffer for sending expressions to the postfix evaluation method
+		PostfixEvaluator expressionEvaluator = new PostfixEvaluator();
+		Boolean continueEvaluation = true; // sentinel value for the while loop
+		
+		// print some instructions to the user
+		System.out.printf("\nThis program evaluates integer arithmetic expressions in postfix notation."
+				+ "\nType a complete expression and press enter to evaluate."
+				+ "\nThe program will continue to accept expressions and output results until \"exit\" is entered.\n");
+		
+		// run until "exit" is entered
+		while(continueEvaluation)
+		{
+			userInputBuffer.delete(0, userInputBuffer.length()); // clear the StringBuffer
+			
+			System.out.printf("\nEnter an expression: "); // prompt user for an expression
+			
+			userInputBuffer.append(userInputReceiver.nextLine()); // place data in the StringBuffer
+			
+			// if the user entered "exit", set sentinel to false
+			if(userInputBuffer.toString().equals("exit"))
+			{
+				continueEvaluation = false;
+				System.out.println("Exiting..."); // let the user know that the program is closing
+			}
+			
+			else
+			{
+				// evaluate the expression and print the result
+				System.out.printf("Result: %d\n", expressionEvaluator.evaluatePostfixExpression(userInputBuffer));
+			}
+		}
+		
+		userInputReceiver.close(); // close the scanner
+		
+		System.out.println("Program finished."); // let the user know that the program is done
+	}
+
+}

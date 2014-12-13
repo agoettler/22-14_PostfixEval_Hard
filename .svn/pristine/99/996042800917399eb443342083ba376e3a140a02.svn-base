@@ -1,0 +1,34 @@
+import java.util.Scanner;
+
+
+/*
+ * Introduction to Software Design 2014
+ * Author: Andrew Goettler
+ * Problem: 22.14 Postfix Evaluator Modification
+ * Problem difficulty: Hard
+ * Problem description: Modify the postfix evaluator program of Exercise 22.13
+ * 		so that it can process integer operands larger than 9
+ */
+
+public class PostFixEvalTest
+{
+
+	public static void main(String[] args)
+	{
+		// TODO Add more testing code
+		Scanner userInputReceiver;
+		StringBuffer userInputBuffer = new StringBuffer();
+		PostfixEvaluator expressionEvaluator = new PostfixEvaluator();
+		
+		System.out.printf("\nThis program evaluates integer arithmetic expressions in postfix notation."
+				+ "\nType a complete expression and press enter to evaluate."
+				+ "\nThe program will continue to accept expressions and output results until \"exit\" is entered.");
+		
+		do
+		{
+			userInputReceiver.
+			userInputBuffer.append(userInputReceiver.nextLine())
+		} while(! (userInputBuffer.toString().equals("exit")));
+	}
+
+}
